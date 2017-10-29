@@ -30,6 +30,7 @@ export default class Partial extends React.Component{
             journal = <p style={{color: 'grey', textAlign: 'center'}}>Your Entries will be shown here</p>;
           }
           else{
+            data.reverse();
             journal = data.map(entry =>{
               if(entry.credit === 0) 
                 return <li key={entry._id}><b>{entry.particular}</b> to <b>{entry.name}</b> of <b>&#8377;{entry.debit}</b> on <b>{new Date(entry.date).toDateString()}</b></li>
@@ -55,6 +56,7 @@ export default class Partial extends React.Component{
           if(data.length === 0)
             journal = <td style={{color: 'grey', textAlign: 'center'}}>Your Entries will be shown here</td>;
           else{
+            data.reverse();
             journal = data.map(entry => {
               return <tr key={entry._id}>
                   <td>{new Date(entry.date).toDateString()}</td>
