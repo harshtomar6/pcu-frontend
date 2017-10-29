@@ -199,6 +199,7 @@ export default class Modal extends React.Component{
                 <option value="Cheque Paid">Cheque Paid</option>
                 <option value="Salary Paid">Salary Paid</option>
                 <option value="Cash Drawn">Cash Drawn</option>
+                <option value="Expenses">Expenses</option>
               </select>
               
               {transactionType}
