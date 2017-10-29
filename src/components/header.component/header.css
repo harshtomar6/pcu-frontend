@@ -3,6 +3,8 @@ header{
   background-color: #088C6F;
   box-shadow: 3px 2px 15px rgba(0, 0, 0, 0.35);
   color: #fff;
+  position: fixed;
+  margin-bottom: 70px;
   margin-top: 0 !important; 
   padding-bottom: 5px;
   width: 100%;

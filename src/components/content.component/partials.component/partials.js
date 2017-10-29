@@ -32,9 +32,9 @@ export default class Partial extends React.Component{
           else{
             journal = data.map(entry =>{
               if(entry.credit === 0) 
-                return <li key={entry._id}><b>{entry.description}</b> to <b>{entry.name}</b> of <b>&#8377;{entry.debit}</b> on <b>{new Date(entry.date).toDateString()}</b></li>
+                return <li key={entry._id}><b>{entry.particular}</b> to <b>{entry.name}</b> of <b>&#8377;{entry.debit}</b> on <b>{new Date(entry.date).toDateString()}</b></li>
               else
-                return <li key={entry._id}><b>{entry.description}</b> from <b>{entry.name}</b> of <b>&#8377;{entry.credit}</b> on <b>{new Date(entry.date).toDateString()}</b></li>
+                return <li key={entry._id}><b>{entry.particular}</b> from <b>{entry.name}</b> of <b>&#8377;{entry.credit}</b> on <b>{new Date(entry.date).toDateString()}</b></li>
             })
           }
 
@@ -53,15 +53,15 @@ export default class Partial extends React.Component{
 
           //If no data is present
           if(data.length === 0)
-            journal = <p style={{color: 'grey', textAlign: 'center'}}>Your Entries will be shown here</p>;
+            journal = <td style={{color: 'grey', textAlign: 'center'}}>Your Entries will be shown here</td>;
           else{
             journal = data.map(entry => {
-              <tr key={entry._id}>
-                <td>{new Date(entry.date).toDateString()}</td>
-                <td>{entry.particular}</td>
-                <td>{entry.debit}</td>
-                <td>{entry.credit}</td>
-              </tr>
+              return <tr key={entry._id}>
+                  <td>{new Date(entry.date).toDateString()}</td>
+                  <td>{entry.particular.split('to')[0]} <br/> to {entry.particular.split("to")[1]} <br/> ({entry.description}) </td>
+                  <td>{entry.debit}</td>
+                  <td><br/>{entry.credit}</td>
+                </tr>
             })
           }
 

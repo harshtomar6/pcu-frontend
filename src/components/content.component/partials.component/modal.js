@@ -11,47 +11,80 @@ export default class Modal extends React.Component{
 
     this.state = {
       loading: false,
-      description: '',
-      name: '',
-      credit: '',
-      debit: '',
-      date: new Date().toISOString().substr(0, 10)
+      particular: 'Goods Sold',
+      description: null,
+      name: null,
+      credit: null,
+      debit: null,
+      date: new Date().toISOString().substr(0, 10),
+      typeNeeded: true,
+      checked1: false,
+      checked2: false,
+      checked3: true
     }
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(e){
-    let target = e.target.placeholder;
-
+    let target = e.target.id;
+  
     switch(target){
-      case 'Date':
+      case 'date':
         this.setState({
           date: e.target.value
         })
         break;
-      case 'Description':
+      case 'particular':
+        this.setState({
+          particular: e.target.value,
+          typeNeeded: e.target.value === 'Goods Sold' || e.target.value === 'Goods Purchased'
+        })
+        break;
+      case 'description':
         this.setState({
           description: e.target.value
         })
         break;
-      case 'Name':
+      case 'name':
         this.setState({
           name: e.target.value
         })
         break;
-      case 'Debit Amount':
+      case 'debit':
         this.setState({
           debit: e.target.value,
           credit: 0
         })
         break;
-      case 'Credit Amount':
+      case 'credit':
         this.setState({
           credit: e.target.value,
           debit: 0
         })
         break;
+      case 'type1':
+        this.setState({
+          checked1: true,
+          checked2: false,
+          checked3: false
+        })
+        break;
+      case 'type2':
+        this.setState({
+          checked1: false,
+          checked2: true,
+          checked3: false
+        })
+        break;
+      case 'type3':
+        this.setState({
+          checked1: false,
+          checked2: false,
+          checked3: true
+        })
+        break;
+
     }
   }
 
@@ -60,6 +93,10 @@ export default class Modal extends React.Component{
 
     this.setState({loading: true})
     
+    var radio = document.querySelector('input[type="radio"]:checked')
+    var transactionType = radio ? radio.value : 'none';
+    console.log(transactionType)
+
     fetch(config.SERVER_URI+'/journal', {
       method: "post",
       headers: {
@@ -67,8 +104,10 @@ export default class Modal extends React.Component{
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        type: transactionType,
         date: this.state.date,
         name: this.state.name,
+        particular: this.state.particular,
         description: this.state.description,
         debit: this.state.debit,
         credit: this.state.credit
@@ -81,6 +120,14 @@ export default class Modal extends React.Component{
       this.setState({loading: false})
 
       if(data.success){
+        //Reset form values
+        this.setState({
+          particular: 'Goods Sold',
+          name: '',
+          description: '',
+          credit: '',
+          debit: ''
+        })
 
         //Dismiss modal
         this.handleClick()
@@ -104,6 +151,26 @@ export default class Modal extends React.Component{
   render(){
 
     var showLoader = this.state.loading ? <Loader /> : ''
+    var transactionType = this.state.typeNeeded ? <div className="form-group">
+                                                    <label htmlFor="type">Transaction Type</label>
+                                                    <div className="radio-wraper" id="type-wraper">
+                                                      <label className="radio-inline">
+                                                        <input type="radio" name="type" id="type1" value="cash"
+                                                        checked={this.state.checked1} onChange={this.handleChange}/>
+                                                        Cash Account
+                                                      </label>
+                                                      <label className="radio-inline">
+                                                        <input type="radio" name="type" id="type2" value="bank"
+                                                        checked={this.state.checked2} onChange={this.handleChange}/>
+                                                         Bank Account
+                                                      </label>
+                                                      <label className="radio-inline">
+                                                        <input type="radio" name="type" id="type3" value="other" 
+                                                        checked={this.state.checked3} onChange={this.handleChange}/>
+                                                        Other
+                                                      </label>
+                                                    </div>
+                                                  </div> : ''
 
     return(
       <div id="modal">
@@ -115,28 +182,53 @@ export default class Modal extends React.Component{
           </div>
           <div id="modal-body">
             <form onSubmit={this.handleSubmit.bind(this)}>
-              <div className="radio-wraper">
-                <label className="radio-inline">
-                  <input type="radio" name="type" value="Cash Account"/>Cash Account
-                </label>
-                <label className="radio-inline">
-                  <input type="radio" name="type" value="Bank Account"/>Bank Account
-                </label>
-                <label className="radio-inline">
-                  <input type="radio" name="type" value="None" checked/>None
-                </label>
+              
+              <div className="form-group">
+                <label htmlFor="date">Date</label>
+                <input type="date" id="date" className="form-control" placeholder="Date" onChange={this.handleChange} 
+                  value={this.state.date} required />
               </div>
-              <input type="date" className="form-control" placeholder="Date" onChange={this.handleChange} 
-                value={this.state.date} required />
-              <input type="text" placeholder="Description" className="form-control" onChange={this.handleChange} 
-                value={this.state.description} required />
-              <input type="text" placeholder="Name" className="form-control" onChange={this.handleChange} 
+          
+              <label htmlFor="particular">Particular</label>
+              <select className="form-control" id="particular" onChange={this.handleChange} value={this.state.particular}>
+                <option value="Goods Sold">Goods Sold</option>
+                <option value="Goods Purchased">Goods Purchased</option>
+                <option value="Cash Recieved">Cash Recieved</option>
+                <option value="Cheque Recieved">Cheque Recieved</option>
+                <option value="Cash Paid">Cash Paid</option>
+                <option value="Cheque Paid">Cheque Paid</option>
+                <option value="Salary Paid">Salary Paid</option>
+                <option value="Cash Drawn">Cash Drawn</option>
+              </select>
+              
+              {transactionType}
+
+              <div className="form-group">
+                <label htmlFor="description">Narration</label>
+                <input type="text" id="description" placeholder="Narration" className="form-control"
+                 onChange={this.handleChange} value={this.state.description} />
+                <small id="descHelp" className="form-text text-muted">*This field is Optional</small>
+              </div>
+              
+
+              <label>Name</label>
+              <input type="text" id="name" placeholder="Name" className="form-control" onChange={this.handleChange} 
                 value={this.state.name} required />
-              <input type="number" placeholder="Debit Amount" className="form-control" style={{marginRight:5+'px'}} 
-              onChange={this.handleChange} value={this.state.debit} required />
-              <input type="number" placeholder="Credit Amount" className="form-control" onChange={this.handleChange} 
-                value={this.state.credit} required />
+
+              <div className="form-group row">
+                <div className="col-xs-6">
+                  <label>Debit Amount:</label>
+                  <input type="number" id="debit" placeholder="Debit Amount" className="form-control" style={{marginRight:5+'px'}} 
+                  onChange={this.handleChange} value={this.state.debit} required />
+                </div>
+                <div className="col-xs-6">
+                  <label>Credit Amount:</label>
+                  <input type="number" id="credit" placeholder="Credit Amount" className="form-control" onChange={this.handleChange} 
+                    value={this.state.credit} required />
+                </div>
+              </div>
               <input type="submit" value="Submit" className="btn"/>
+            
               {showLoader}
             </form>
           </div>
