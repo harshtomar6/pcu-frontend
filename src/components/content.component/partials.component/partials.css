@@ -15,6 +15,8 @@
   margin: 0;
   padding-top: 10px;
   padding-bottom: 2px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .partial-head p{
@@ -27,10 +29,34 @@
 .partial-body{
   padding: 5% 2%;
   background: #fff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.partial-body ul{
+  margin: 0;
+  padding: 5px;
 }
 
 .partial-body li{
-  font-size: 1.2em;
+  list-style-type: none;
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.partial-body li:hover{
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.partial-body li i{
+  cursor: pointer;
+  font-size: 1.5em;
+  margin: 2px;
+  transition: all 0.2s;
+}
+
+.partial-body li i:hover{
+  transform: scale(1.5);
 }
 
 .btn{
