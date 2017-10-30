@@ -11,7 +11,8 @@ export default class Content extends React.Component{
 
     this.state = {
       updatedData: '',
-      editData: ''
+      editData: '',
+      clearData: false
     }
   }
 
@@ -29,7 +30,14 @@ export default class Content extends React.Component{
 
   editEntry(data){
     this.setState({
-      editData: data
+      editData: data,
+      clearData: false
+    })
+  }
+
+  clearData(){
+    this.setState({
+      clearData: true
     })
   }
 
@@ -39,7 +47,7 @@ export default class Content extends React.Component{
       <div id="content">
         <div className="col-xs-12 col-md-4 col-sm-6">
           <Partial heading="Daily Journal" type="daily journal" deleteEntry={this.deleteEntry.bind(this)}
-             editEntry = {this.editEntry.bind(this)}/>
+             editEntry = {this.editEntry.bind(this)} clearData={this.clearData.bind(this)}/>
         </div>
         <div className="col-xs-12 col-md-4 col-sm-6">
           <Partial heading="Journal Entry" type="journal entry" deleteEntry={this.deleteEntry.bind(this)}/>
@@ -47,7 +55,7 @@ export default class Content extends React.Component{
         <div className="col-xs-12 col-md-4 col-sm-6">
           <Partial heading="Ledger" type="ledger"/>
         </div>
-        <Modal updateEntry={this.updateEntry.bind(this)} data={this.state.editData}/>
+        <Modal updateEntry={this.updateEntry.bind(this)} data={this.state.editData} clearData={this.state.clearData}/>
       </div>
     );
   }

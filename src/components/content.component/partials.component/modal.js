@@ -29,32 +29,52 @@ export default class Modal extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-      
-      this.setState({
-        edit: true,
-        id: nextProps.data._id,
-        particular: nextProps.data.particular,
-        description: nextProps.data.description,
-        name: nextProps.data.name,
-        credit: nextProps.data.credit,
-        debit: nextProps.data.debit,
-        date: new Date(nextProps.data.date).toISOString().substr(0, 10),
-        typeNeeded: nextProps.data.particular === 'Goods Sold' || nextProps.data.particular === 'Goods Purchased'
-      })
-
-      if(nextProps.data.type === 'bank')
+    console.log(nextProps.clearData)
+      if(nextProps.clearData){
+        console.log(nextProps.clearData)
         this.setState({
+          loading: false,
+          particular: 'Goods Sold',
+          description: '',
+          name: '',
+          credit: '',
+          debit: '',
+          date: new Date().toISOString().substr(0, 10),
+          typeNeeded: true,
           checked1: false,
-          checked2: true,
-          checked3: false
-        })
-      else if(nextProps.data.type === 'cash')
-        this.setState({
-          checked1: true,
           checked2: false,
-          checked3: false
+          checked3: true,
+          id: null,
+          edit: false
         })
-    
+      }
+      else{
+        this.setState({
+          edit: true,
+          id: nextProps.data._id,
+          particular: nextProps.data.particular,
+          description: nextProps.data.description,
+          name: nextProps.data.name,
+          credit: nextProps.data.credit,
+          debit: nextProps.data.debit,
+          date: new Date(nextProps.data.date).toISOString().substr(0, 10),
+          typeNeeded: nextProps.data.particular === 'Goods Sold' || nextProps.data.particular === 'Goods Purchased'
+        })
+  
+        if(nextProps.data.type === 'bank')
+          this.setState({
+            checked1: false,
+            checked2: true,
+            checked3: false
+          })
+        else if(nextProps.data.type === 'cash')
+          this.setState({
+            checked1: true,
+            checked2: false,
+            checked3: false
+          })
+   
+      }   
   }
 
   handleChange(e){

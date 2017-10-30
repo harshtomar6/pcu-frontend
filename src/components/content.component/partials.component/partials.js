@@ -48,7 +48,7 @@ export default class Partial extends React.Component{
                         &nbsp;on <b>{new Date(entry.date).toDateString()}</b>
                     </div>
                     <div className="col-xs-3">
-                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;&nbsp;
+                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;
                       <i className="fa fa-trash" style={{color: '#CF0A2C'}} title="Delete" onClick={this.deleteEntry}></i>
                     </div>
                     </div>
@@ -63,7 +63,7 @@ export default class Partial extends React.Component{
                         &nbsp;on <b>{new Date(entry.date).toDateString()}</b>
                     </div>
                     <div className="col-xs-3">
-                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;&nbsp;
+                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;
                       <i className="fa fa-trash" style={{color: '#CF0A2C'}} title="Delete" onClick={this.deleteEntry}></i>
                     </div>
                     </div>
@@ -118,6 +118,8 @@ export default class Partial extends React.Component{
   handleClick(){
     document.getElementById('modal-outer').style.display = 'block';
     document.getElementById('modal-wraper').style.display = 'block';
+
+    this.props.clearData()
   }
 
   deleteEntry(e){
@@ -145,7 +147,8 @@ export default class Partial extends React.Component{
     var data = this.state.dailyJournalData[this.state.dailyJournalData.findIndex(entry => { return entry._id == id })]
 
     this.props.editEntry(data)
-    this.handleClick();
+    document.getElementById('modal-outer').style.display = 'block';
+    document.getElementById('modal-wraper').style.display = 'block';
   }
 
   render(){
