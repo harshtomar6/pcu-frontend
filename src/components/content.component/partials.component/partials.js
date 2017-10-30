@@ -12,11 +12,12 @@ export default class Partial extends React.Component{
     this.state = {
       dailyJournal: null,
       journalEntry: null,
-      editor: false
+      dailyJournalData: null
     }
 
     this.loadData = this.loadData.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
+    this.editEntry = this.editEntry.bind(this);
   }
 
   loadData(){
@@ -33,6 +34,9 @@ export default class Partial extends React.Component{
             journal = <p style={{color: 'grey', textAlign: 'center'}}>Your Entries will be shown here</p>;
           }
           else{
+            this.setState({
+              dailyJournalData: data  
+            })
             data.reverse();
             journal = data.map(entry =>{
               if(entry.credit === 0) 
@@ -44,7 +48,7 @@ export default class Partial extends React.Component{
                         &nbsp;on <b>{new Date(entry.date).toDateString()}</b>
                     </div>
                     <div className="col-xs-3">
-                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit"></i>&nbsp;
+                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;&nbsp;
                       <i className="fa fa-trash" style={{color: '#CF0A2C'}} title="Delete" onClick={this.deleteEntry}></i>
                     </div>
                     </div>
@@ -59,7 +63,7 @@ export default class Partial extends React.Component{
                         &nbsp;on <b>{new Date(entry.date).toDateString()}</b>
                     </div>
                     <div className="col-xs-3">
-                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit"></i>&nbsp;
+                      <i className="fa fa-pencil" style={{color: '#088C6F'}} title="Edit" onClick={this.editEntry}></i>&nbsp;&nbsp;
                       <i className="fa fa-trash" style={{color: '#CF0A2C'}} title="Delete" onClick={this.deleteEntry}></i>
                     </div>
                     </div>
@@ -131,26 +135,17 @@ export default class Partial extends React.Component{
     })
     .then(result => {return result.json()})
     .then(data => {
-
       this.props.deleteEntry();
-
-      switch(this.props.type){
-        case 'daily journal':
-          var dailyJournal = this.state.dailyJournal
-          
-          dailyJournal.splice(dailyJournal.findIndex((obj) => {return obj._id == id}))
-          this.setState({dailyJournal : dailyJournal})
-
-          break;
-        
-        case 'journal entry':
-          var journalEntry = this.state.journalEntry
-          journalEntry.splice(journalEntry.findIndex((obj) => {return obj.id == id}))
-          this.setState({journalEntry: journalEntry})
-
-          break;
-      }
     })
+  }
+
+  editEntry(e){
+    var id = e.target.parentElement.parentElement.parentElement.id
+    
+    var data = this.state.dailyJournalData[this.state.dailyJournalData.findIndex(entry => { return entry._id == id })]
+
+    this.props.editEntry(data)
+    this.handleClick();
   }
 
   render(){
@@ -160,17 +155,14 @@ export default class Partial extends React.Component{
 
     switch(type){
       case 'daily journal':
-        if(this.state.editor)
-          partialBody = <PartialEditor />
-        else
-          partialBody = this.state.dailyJournal ? <div><ul>
-              {this.state.dailyJournal}   
-            </ul><br/>
-            <p className="text-center">
-              <button type="btn" className="btn" onClick={this.handleClick.bind(this)}>
-                <i className="fa fa-pencil"></i> Add New
-              </button>
-            </p></div> : <Loader />;
+        partialBody = this.state.dailyJournal ? <div><ul>
+            {this.state.dailyJournal}   
+          </ul><br/>
+          <p className="text-center">
+            <button type="btn" className="btn" onClick={this.handleClick.bind(this)}>
+              <i className="fa fa-pencil"></i> Add New
+            </button>
+          </p></div> : <Loader />;
         break;
 
       case 'journal entry':

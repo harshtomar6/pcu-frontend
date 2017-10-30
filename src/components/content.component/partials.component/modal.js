@@ -20,10 +20,41 @@ export default class Modal extends React.Component{
       typeNeeded: true,
       checked1: false,
       checked2: false,
-      checked3: true
+      checked3: true,
+      id: null,
+      edit: false
     }
 
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps){
+      
+      this.setState({
+        edit: true,
+        id: nextProps.data._id,
+        particular: nextProps.data.particular,
+        description: nextProps.data.description,
+        name: nextProps.data.name,
+        credit: nextProps.data.credit,
+        debit: nextProps.data.debit,
+        date: new Date(nextProps.data.date).toISOString().substr(0, 10),
+        typeNeeded: nextProps.data.particular === 'Goods Sold' || nextProps.data.particular === 'Goods Purchased'
+      })
+
+      if(nextProps.data.type === 'bank')
+        this.setState({
+          checked1: false,
+          checked2: true,
+          checked3: false
+        })
+      else if(nextProps.data.type === 'cash')
+        this.setState({
+          checked1: true,
+          checked2: false,
+          checked3: false
+        })
+    
   }
 
   handleChange(e){
@@ -97,21 +128,31 @@ export default class Modal extends React.Component{
     var transactionType = radio ? radio.value : 'none';
     console.log(transactionType)
 
-    fetch(config.SERVER_URI+'/journal', {
+    var url = this.state.edit ? '/update-journal' : '/journal';
+    var postData = this.state.edit ? { type: transactionType,
+      id: this.state.id,
+      date: this.state.date,
+      name: this.state.name,
+      particular: this.state.particular,
+      description: this.state.description,
+      debit: this.state.debit,
+      credit: this.state.credit} : 
+      
+      { type: transactionType,
+      date: this.state.date,
+      name: this.state.name,
+      particular: this.state.particular,
+      description: this.state.description,
+      debit: this.state.debit,
+      credit: this.state.credit}
+
+    fetch(config.SERVER_URI+url, {
       method: "post",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        type: transactionType,
-        date: this.state.date,
-        name: this.state.name,
-        particular: this.state.particular,
-        description: this.state.description,
-        debit: this.state.debit,
-        credit: this.state.credit
-      })
+      body: JSON.stringify(postData)
     })
     .then(result => {
       return result.json()

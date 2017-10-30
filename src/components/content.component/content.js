@@ -10,7 +10,8 @@ export default class Content extends React.Component{
     super()
 
     this.state = {
-      updatedData: ''
+      updatedData: '',
+      editData: ''
     }
   }
 
@@ -26,12 +27,19 @@ export default class Content extends React.Component{
     })
   }
 
+  editEntry(data){
+    this.setState({
+      editData: data
+    })
+  }
+
   render(){
 
     return(
       <div id="content">
         <div className="col-xs-12 col-md-4 col-sm-6">
-          <Partial heading="Daily Journal" type="daily journal" deleteEntry={this.deleteEntry.bind(this)}/>
+          <Partial heading="Daily Journal" type="daily journal" deleteEntry={this.deleteEntry.bind(this)}
+             editEntry = {this.editEntry.bind(this)}/>
         </div>
         <div className="col-xs-12 col-md-4 col-sm-6">
           <Partial heading="Journal Entry" type="journal entry" deleteEntry={this.deleteEntry.bind(this)}/>
@@ -39,7 +47,7 @@ export default class Content extends React.Component{
         <div className="col-xs-12 col-md-4 col-sm-6">
           <Partial heading="Ledger" type="ledger"/>
         </div>
-        <Modal updateEntry={this.updateEntry.bind(this)}/>
+        <Modal updateEntry={this.updateEntry.bind(this)} data={this.state.editData}/>
       </div>
     );
   }
