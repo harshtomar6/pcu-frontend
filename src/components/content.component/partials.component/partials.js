@@ -116,6 +116,7 @@ export default class Partial extends React.Component{
   }
 
   handleClick(){
+    window.scrollTo(0, 0);
     document.getElementById('modal-outer').style.display = 'block';
     document.getElementById('modal-wraper').style.display = 'block';
 
@@ -154,18 +155,20 @@ export default class Partial extends React.Component{
   render(){
     let type = this.props.type;
 
-    var partialBody;
+    var partialBody, partialBottom;
 
     switch(type){
       case 'daily journal':
         partialBody = this.state.dailyJournal ? <div><ul>
             {this.state.dailyJournal}   
           </ul><br/>
-          <p className="text-center">
+          </div> : <Loader />;
+
+        partialBottom = <p className="text-center">
             <button type="btn" className="btn" onClick={this.handleClick.bind(this)}>
               <i className="fa fa-pencil"></i> Add New
             </button>
-          </p></div> : <Loader />;
+          </p>
         break;
 
       case 'journal entry':
@@ -179,6 +182,7 @@ export default class Partial extends React.Component{
             </tr>
           </thead>
           <tbody>{this.state.journalEntry}</tbody></table> : <Loader />
+          partialBottom='';
         break;
       
       default:
@@ -192,6 +196,9 @@ export default class Partial extends React.Component{
         </div>
         <div className="partial-body">
           {partialBody}
+        </div>
+        <div className="partial-bottom">
+          {partialBottom}
         </div>
       </div>
     );
