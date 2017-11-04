@@ -172,7 +172,7 @@ export default class Partial extends React.Component{
         break;
 
       case 'journal entry':
-        partialBody = this.state.journalEntry ? <table className="table table-hover">
+        partialBody = this.state.journalEntry ? <table className="table table-hover table-striped">
           <thead>
             <tr>
               <th>Date</th>

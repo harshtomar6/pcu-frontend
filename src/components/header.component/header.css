@@ -13,7 +13,13 @@ header{
 
 header h2{
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-  font-size: 2.4em;
+  font-size: 1.5em;
   font-family: 'Titillium Web';
   font-weight: 700;
+}
+
+@media(min-width: 768px){
+  header h2{
+    font-size: 2.4em;
+  }
 }
